@@ -1,0 +1,28 @@
+name: 'publish'
+
+on:
+    push:
+      branches:
+        - main
+    pull_request:
+
+jobs:
+    # run cargo build on all platforms and if successful, publish to crates.io
+    build:
+        runs-on: ${{ matrix.os }}
+        strategy:
+            matrix:
+                os: [ubuntu-latest, macos-latest, windows-latest]
+                rust: [stable, beta, nightly]
+        steps:
+            - uses: actions/checkout@v2
+            - name: Set up Rust ${{ matrix.rust }}
+              uses: actions-rs/toolchain@v1
+              with:
+                  toolchain: ${{ matrix.rust }}
+                  override: true
+            - name: Build and test
+              run: cargo build --verbose --all
+            - name: Publish to crates.io
+              if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+              run: cargo publish --token ${{ secrets.CRATES_IO_TOKEN }}
