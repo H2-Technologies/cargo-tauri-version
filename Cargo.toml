@@ -1,7 +1,15 @@
 [package]
 name = "cargo-tauri-version"
-version = "0.1.0"
+version = "1.0.0"
 edition = "2021"
+license = "MIT"
+authors = ["H2 Technologies <admin@austinh.dev>"]
+description = "A cargo subcommand to output the current version of a tauri app. Future versions will allow for setting the version and ensuring the version is set in the Cargo manifest."
+repository = "https://github.com/h2-technologies/cargo-tauri-version"
+readme = "README.md"
+documentation = "https://docs.rs/cargo-tauri-version"
+homepage = "https://github.com/h2-technologies/cargo-tauri-version"
+keywords = ["cargo", "tauri", "version", "subcommand"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
