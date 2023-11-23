@@ -23,23 +23,9 @@ jobs:
                   override: true
             - name: Build and test
               run: cargo build --verbose --all
-    publish:
-        needs: build
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v2
-            - name: Set up Rust stable
-              uses: actions-rs/toolchain@v1
-              with:
-                  toolchain: stable
-                  override: true
-            - name: Login to crates.io
-              uses: actions-rs/cargo@v1
-              with:
-                  command: login
-                  args: ${{ secrets.CRATES_IO_TOKEN }}
+            # after successful build, publish to crates.io
             - name: Publish to crates.io
-              uses: actions-rs/cargo@v1
-              with:
-                  command: publish
-                  args: --allow-dirty
+              if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+              run: cargo publish --token ${{ secrets.CRATES_IO_TOKEN }} --dry-run
+              env:
+                  CRATES_IO_TOKEN: ${{ secrets.CRATES_IO_TOKEN }}
