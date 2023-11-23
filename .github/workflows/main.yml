@@ -23,9 +23,18 @@ jobs:
                   override: true
             - name: Build and test
               run: cargo build --verbose --all
-            # after successful build, publish to crates.io
+    publish:
+        needs: build
+        runs-on: ubuntu-latest
+        steps:
+            #login to crates.io
+            - name: Login to crates.io
+              uses: actions-rs/cargo@v1
+              with:
+                  command: login
+                  args: ${{ secrets.CRATES_IO_TOKEN }}
+            #publish to crates.io
             - name: Publish to crates.io
-              if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-              run: cargo publish --token ${{ secrets.CRATES_IO_TOKEN }}
-              env:
-                  CRATES_IO_TOKEN: ${{ secrets.CRATES_IO_TOKEN }}
+              uses: actions-rs/cargo@v1
+              with:
+                  command: publish
